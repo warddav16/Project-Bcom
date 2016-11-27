@@ -8,9 +8,11 @@ public class GridUnit : MonoBehaviour
     public TypeMap MyType;
     public float Damage = 1;
     public float MaxHealth = 5;
-    private float Health;
+    public GameGrid Grid;
 
-    private int Location = 0;
+    public int PlayerAffinity = 0;
+    private int _gridLocation = 0;
+    private float Health;
 
     void Awake()
     {
@@ -43,5 +45,19 @@ public class GridUnit : MonoBehaviour
     public void Die()
     {
         Destroy(gameObject);
+    }
+
+    public void SetLocation(int location)
+    {
+        _gridLocation = location;
+        if (_gridLocation < 0)
+            return;
+        Vector2 xzPos = Grid.GetWorldPos(_gridLocation);
+        transform.position = new Vector3( xzPos.x, Grid.transform.position.y, xzPos.y );
+    }
+
+    public bool CanMoveTo(int location)
+    {
+        return true;
     }
 }
