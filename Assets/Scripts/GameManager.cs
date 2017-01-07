@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public void SetActiveGridUnit( GridUnit toBeActive )
     {
         _activeGridUnit = toBeActive;
+        toBeActive.SetActiveUnit();
     }
 
     void Awake()
@@ -78,12 +79,20 @@ public class GameManager : MonoBehaviour
                    if( _activeGridUnit && _activeGridUnit.CanMoveTo( hitIdx ) )
                    {
                         // User selected a valid location for this unit to move to
-                        _activeGridUnit.SetLocation( hitIdx );
+                        _activeGridUnit.MoveNoCheck( hitIdx );
 
-                        NextTurn();
+                        if (!_activeGridUnit.HasMovementRemaining())
+                        {
+                            NextTurn();
+                        }
                    }
                 }
             }
+        }
+
+        if( Input.GetKeyUp(KeyCode.Escape))
+        {
+            NextTurn();
         }
     }
 

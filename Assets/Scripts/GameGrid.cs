@@ -94,4 +94,13 @@ public class GameGrid : MonoBehaviour
     {
         return ( _gridData.gridFlags[idx] & GridFlags.NotAvailable ) != 0;
     }
+
+    public int GetManhattenDistance( int idx1, int idx2 )
+    {
+        int width1 = idx1 % Height;
+        int height1 = (idx1 - width1) / Height;
+        int width2 = idx2 % Height;
+        int height2 = (idx2 - width2) / Height;
+        return Math.Abs(height1 - height2) + Math.Abs(width1 - width2);
+    }
 }

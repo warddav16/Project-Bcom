@@ -13,6 +13,7 @@ public class GridUnit : MonoBehaviour
     public int PlayerAffinity = 0;
     private int _gridLocation = 0;
     private float Health;
+    private int _movementRemainingThisTurn = -1;
 
     void Awake()
     {
@@ -47,6 +48,11 @@ public class GridUnit : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public void SetActiveUnit()
+    {
+        _movementRemainingThisTurn = MovementPerTurn;
+    }
+
     public void SetLocation(int location)
     {
         _gridLocation = location;
@@ -58,6 +64,17 @@ public class GridUnit : MonoBehaviour
 
     public bool CanMoveTo(int location)
     {
-        return true;
+        return Grid.GetManhattenDistance(_gridLocation, location) <= _movementRemainingThisTurn;
+    }
+
+    public void MoveNoCheck(int location)
+    {
+        _movementRemainingThisTurn -= Grid.GetManhattenDistance(_gridLocation, location);
+        SetLocation(location);
+    }
+
+    public bool HasMovementRemaining()
+    {
+        return _movementRemainingThisTurn > 0;
     }
 }
