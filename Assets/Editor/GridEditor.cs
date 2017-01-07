@@ -36,6 +36,7 @@ public class GridEditor : Editor
             {
                 Vector3 drawPoint = grid.transform.position + new Vector3(w * grid.Spacing, 0, h * grid.Spacing) + innerGridOffset;
                 Color cubeColor = Color.green;
+
                 int idx = h * grid.Width + w;
                 if( grid.IsIndexAvailable(idx) )
                 {
