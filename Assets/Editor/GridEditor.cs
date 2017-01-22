@@ -22,10 +22,10 @@ public class GridEditor : Editor
         if (Physics.Raycast(mousePosInScene, out hit, 1000.0f, layerMask))
         {
             hitIdx = grid.GetGridCoordFromWorldPos(hit.point.ToVec2XZ());
-            Debug.Log(Event.current.type);
             if(Event.current.type == EventType.MouseDown && Event.current.button == 0 )
             {
-                grid.ToggleIndexFromGrid(hitIdx);
+                if( hitIdx != -1)
+                    grid.ToggleIndexFromGrid(hitIdx);
             }
         }
 
@@ -38,7 +38,7 @@ public class GridEditor : Editor
                 Color cubeColor = Color.green;
 
                 int idx = h * grid.Width + w;
-                if( grid.IsIndexAvailable(idx) )
+                if( !grid.IsIndexAvailable(idx) )
                 {
                     cubeColor = Color.red;
                 }

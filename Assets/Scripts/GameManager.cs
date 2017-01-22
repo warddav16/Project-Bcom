@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
         toBeActive.SetActiveUnit();
     }
 
+    public GridUnit GetActiveGridUnit() { return _activeGridUnit; }
+
     void Awake()
     {
         _instance = this;

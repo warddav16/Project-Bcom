@@ -7,7 +7,7 @@ public class GameGrid : MonoBehaviour
     [Flags]
     enum GridFlags
     {
-        Occupied,
+        None,
         NotAvailable
     }
     class GridData
@@ -22,9 +22,20 @@ public class GameGrid : MonoBehaviour
     [SerializeField]
     private GridData _gridData = new GridData();
 
+    GameObject[] _gridObjects;
+
     GameGrid()
     {
         _gridData.gridFlags = new GridFlags[Width * Height];
+    }
+
+    void Awake()
+    {
+        _gridObjects = new GameObject[Width * Height];
+        for (int i = 0, max = Width * Height; i < max; ++i)
+        {
+            _gridObjects[i] = null;
+        }
     }
 
     void OnValidate()
@@ -39,6 +50,8 @@ public class GameGrid : MonoBehaviour
             data.gridFlags[i] = this._gridData.gridFlags[i];
         }
         this._gridData = data;
+
+
     }
 
     void OnDrawGizmos()
@@ -61,7 +74,7 @@ public class GameGrid : MonoBehaviour
     }
 
     // -1 No hit
-    public int GetGridCoordFromWorldPos( Vector2 xzPos )
+    public int GetGridCoordFromWorldPos(Vector2 xzPos)
     {
         Vector2 gridDim = new Vector2(Width, Height) * Spacing;
         Vector2 basePoint = transform.position.ToVec2XZ();
@@ -82,7 +95,7 @@ public class GameGrid : MonoBehaviour
         int width = gridLocation % Height;
         int height = (gridLocation - width) / Height;
         Vector2 offset = transform.position;
-        return offset + new Vector2(width, height) * Spacing;
+        return offset + new Vector2(width, height) * Spacing + new Vector2(Spacing / 2, Spacing / 2);
     }
 
     public void ToggleIndexFromGrid(int idx)
@@ -92,15 +105,37 @@ public class GameGrid : MonoBehaviour
 
     public bool IsIndexAvailable(int idx)
     {
-        return ( _gridData.gridFlags[idx] & GridFlags.NotAvailable ) != 0;
+        return (_gridData.gridFlags[idx] & GridFlags.NotAvailable) == 0;
     }
 
-    public int GetManhattenDistance( int idx1, int idx2 )
+    public int GetManhattenDistance(int idx1, int idx2)
     {
         int width1 = idx1 % Height;
         int height1 = (idx1 - width1) / Height;
         int width2 = idx2 % Height;
         int height2 = (idx2 - width2) / Height;
         return Math.Abs(height1 - height2) + Math.Abs(width1 - width2);
+    }
+
+    public void SetGridObject(int idx, GameObject obj)
+    {
+        if (idx < 0 || idx > Width * Height)
+        {
+            _gridObjects[idx] = obj;
+        }
+    }
+
+    public GameObject GetGridObject(int idx)
+    {
+        return _gridObjects[idx];
+    }
+
+    public bool CanMoveTo(int gridLocation)
+    {
+        if(gridLocation > 0 && gridLocation < Width * Height)
+        {
+            return IsIndexAvailable(gridLocation) && _gridObjects[gridLocation] == null;
+        }
+        return false;
     }
 }

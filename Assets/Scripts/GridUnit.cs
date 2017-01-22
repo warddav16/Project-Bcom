@@ -55,16 +55,18 @@ public class GridUnit : MonoBehaviour
 
     public void SetLocation(int location)
     {
-        _gridLocation = location;
-        if (_gridLocation < 0)
+        if (location < 0)
             return;
+        Grid.SetGridObject(_gridLocation, null);
+        _gridLocation = location;
+        Grid.SetGridObject(_gridLocation, this.gameObject);
         Vector2 xzPos = Grid.GetWorldPos(_gridLocation);
         transform.position = new Vector3( xzPos.x, Grid.transform.position.y, xzPos.y );
     }
 
     public bool CanMoveTo(int location)
     {
-        return Grid.GetManhattenDistance(_gridLocation, location) <= _movementRemainingThisTurn;
+        return Grid.GetManhattenDistance(_gridLocation, location) <= _movementRemainingThisTurn && Grid.CanMoveTo(location);
     }
 
     public void MoveNoCheck(int location)
